@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payroll — MK Hire Zone</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.payslip{max-width:820px;margin:0 auto;background:#fff;border:1px solid #d7e0ee;border-radius:10px;padding:30px;box-shadow:0 3px 12px rgba(0,0,0,.08);}
+.payslip h3{text-align:center;color:var(--primary);margin-bottom:4px;}
+.payslip .sub2{text-align:center;color:#777;font-size:.85rem;margin-bottom:20px;}
+.payslip table td:first-child{color:#555;}
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:820px;margin:30px auto;}
+@media(max-width:700px){.calc{grid-template-columns:1fr}}
+.res{background:#f0f6ff;border-radius:10px;padding:22px;}
+.res div{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #c7d7ef;font-size:.95rem;}
+.res .tot{font-weight:800;color:var(--primary);font-size:1.05rem;border:none;}
+</style></head><body>
+
+<section class="hero"><h1>Payroll Management</h1><p>Attendance-based salary calculation with PF, ESI and statutory deductions. Rates below are managed live by the admin.</p></section>
+
+<section>
+  <h2>Skill-wise Salary Structure</h2>
+  <p class="sub">Live from admin settings — changes appear here instantly.</p>
+  <div style="max-width:900px;margin:0 auto;overflow-x:auto">
+  <table id="skillTable">
+    <tr><th>Skill Category</th><th>Daily Rate (₹)</th><th>Basic (₹)</th><th>DA (₹)</th><th>HRA / Allowance (₹)</th><th>Gross (₹)</th></tr>
+  </table></div>
+  <p class="sub" style="margin-top:16px;font-size:.85rem" id="attInfo"></p>
+</section>
+
+<section style="background:#fff">
+  <h2>Salary Calculator</h2>
+  <p class="sub">Estimate net take-home for a worker</p>
+  <div class="calc">
+    <form id="calcForm" style="box-shadow:none;border:1px solid #e3e8f0">
+      <div><label>Skill Category</label><select id="cSkill"></select></div>
+      <div><label>Days Worked (out of <span id="wd">26</span>)</label><input type="number" id="cDays" min="0" max="31" value="26"></div>
+      <div><label>Overtime Hours</label><input type="number" id="cOT" min="0" value="0"></div>
+      <div><label>Other Deduction (₹)</label><input type="number" id="cDed" min="0" value="0"></div>
+      <button class="btn" type="submit">Calculate</button>
+    </form>
+    <div class="res" id="calcOut"><p style="color:#888">Fill the form and press Calculate.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Sample Payslip</h2>
+  <p class="sub">Gross ₹18,000 structure — automated payslip generation is part of our payroll service.</p>
+  <div class="payslip">
+    <h3>MK HIRE ZONE</h3>
+    <div class="sub2">HR MANAGEMENT · HR CONSULTANTS · PAYROLL · MANPOWER SOURCING<br>Contact: 8438567188 | mkhirezone@gmail.com</div>
+    <table>
+      <tr><td><b>Employee Name</b></td><td>Sample Worker</td><td><b>Pay Month</b></td><td id="psMonth"></td></tr>
+      <tr><td><b>Employee ID</b></td><td>MKHZ-001</td><td><b>UAN Number</b></td><td>-</td></tr>
+      <tr><td><b>Designation</b></td><td>Production Operator</td><td><b>Department</b></td><td>Production</td></tr>
+      <tr><td><b>Bank / A/C No.</b></td><td>-</td><td><b>Working Days</b></td><td id="psDays">26 / 26</td></tr>
+      <tr><th>EARNINGS</th><th>AMOUNT (₹)</th><th>DEDUCTIONS</th><th>AMOUNT (₹)</th></tr>
+      <tr><td>Basic Salary</td><td>9,000</td><td>EPF Employee (12%)</td><td>1,512</td></tr>
+      <tr><td>DA</td><td>3,600</td><td>ESI Employee (0.75%)</td><td>135</td></tr>
+      <tr><td>HRA / Other Allowance</td><td>5,400</td><td>Other Deduction</td><td>-</td></tr>
+      <tr><td><b>GROSS SALARY</b></td><td><b>18,000</b></td><td><b>TOTAL DEDUCTIONS</b></td><td><b>1,647</b></td></tr>
+      <tr><td><b>NET TAKE-HOME</b></td><td colspan="3"><b style="color:var(--green)">₹16,353</b></td></tr>
+    </table>
+    <p style="margin-top:14px;font-size:.88rem"><b>Employer Contributions:</b> EPF 13% = ₹1,638 (as requested) · ESI 3.25% = ₹585 on gross salary</p>
+    <p style="font-size:.8rem;color:#888;margin-top:8px">Note: Actual statutory deductions may vary according to applicable rules and employee details.</p>
+    <div style="display:flex;justify-content:space-between;margin-top:34px;font-size:.85rem">
+      <div>Employee Signature ____________</div><div>For MK HIRE ZONE<br>Authorized Signature ____________</div>
+    </div>
+  </div>
+</section>
+
+<script src="app.js"></script>
+<script>
+const fmt = n => n.toLocaleString('en-IN');
+function load(){
+  const s = getSettings();
+  document.getElementById('wd').textContent = s.attendance.workingDays;
+  document.getElementById('attInfo').innerHTML = '<b>Attendance policy:</b> ' + s.attendance.shifts + ' | OT rate: ' + s.attendance.otRate + 'x hourly | ' + s.attendance.lopRule;
+  // skill table
+  const t = document.getElementById('skillTable');
+  t.innerHTML = '<tr><th>Skill Category</th><th>Daily Rate (₹)</th><th>Basic (₹)</th><th>DA (₹)</th><th>HRA / Allowance (₹)</th><th>Gross (₹)</th></tr>';
+  const sel = document.getElementById('cSkill'); sel.innerHTML = '';
+  for (const [name,v] of Object.entries(s.skills)){
+    const gross = v.basic + v.da + v.hra;
+    t.innerHTML += `<tr><td><b>${name}</b></td><td>${fmt(v.rate)}</td><td>${fmt(v.basic)}</td><td>${fmt(v.da)}</td><td>${fmt(v.hra)}</td><td style="color:var(--green);font-weight:700">${fmt(gross)}</td></tr>`;
+    sel.innerHTML += `<option value="${name}">${name}</option>`;
+  }
+  document.getElementById('psMonth').textContent = new Date().toLocaleDateString('en-IN',{month:'long',year:'numeric'});
+}
+window.addEventListener('mkhz:settings', load);
+
+document.getElementById('calcForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const s = getSettings();
+  const sk = s.skills[document.getElementById('cSkill').value];
+  const days = Math.min(Math.max(+document.getElementById('cDays').value||0,0),31);
+  const ot = +document.getElementById('cOT').value||0;
+  const ded = +document.getElementById('cDed').value||0;
+  const wd = s.attendance.workingDays;
+  const grossM = sk.basic + sk.da + sk.hra;
+  const daily = grossM / wd;
+  const gross = daily * days + (ot * (sk.rate/8) * s.attendance.otRate);
+  const pf = Math.min(gross,15000) * 0.12;
+  const esi = gross <= 21000 ? gross * 0.0075 : 0;
+  const totalDed = pf + esi + ded;
+  const net = Math.max(gross - totalDed, 0);
+  document.getElementById('psDays').textContent = days + ' / ' + wd;
+  document.getElementById('calcOut').innerHTML = `
+    <div><span>Basic (${days} days)</span><span>₹${fmt(Math.round(daily*days))}</span></div>
+    <div><span>Overtime (${ot} hrs @ ${s.attendance.otRate}x)</span><span>₹${fmt(Math.round(ot*(sk.rate/8)*s.attendance.otRate))}</span></div>
+    <div><span>Gross Salary</span><span><b>₹${fmt(Math.round(gross))}</b></span></div>
+    <div><span>EPF Employee (12%)</span><span>₹${fmt(Math.round(pf))}</span></div>
+    <div><span>ESI Employee (0.75%)</span><span>₹${fmt(Math.round(esi))}</span></div>
+    <div><span>Other Deduction</span><span>₹${fmt(ded)}</span></div>
+    <div class="tot"><span>NET TAKE-HOME</span><span style="color:var(--green)">₹${fmt(Math.round(net))}</span></div>`;
+});
+load();
+</script>
+</body></html>

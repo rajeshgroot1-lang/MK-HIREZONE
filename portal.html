@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Applicant & Client Portal — MK Hire Zone</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="portal-body">
+<main class="portal-page">
+  <div class="portal-shell">
+    <section id="accessView">
+      <p class="portal-kicker">MK HIRE ZONE</p>
+      <h1>Applicant & Client Portal</h1>
+      <p class="portal-intro">Sign in to apply for jobs or manage your staffing requests.</p>
+
+      <div class="portal-switch" role="tablist" aria-label="Account action">
+        <button class="btn portal-tab active" type="button" data-view="login" role="tab" aria-selected="true">Login</button>
+        <button class="btn portal-tab" type="button" data-view="register" role="tab" aria-selected="false">Register</button>
+      </div>
+      <p id="portalMessage" class="portal-message" role="status" aria-live="polite"></p>
+
+      <form id="loginForm" class="portal-form">
+        <h2>Welcome back</h2>
+        <label>Username or email<input name="username" autocomplete="username" required></label>
+        <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+        <button class="btn" type="submit">Login</button>
+      </form>
+
+      <form id="registerForm" class="portal-form" hidden>
+        <h2>Create an account</h2>
+        <label>Account type
+          <select name="role" required>
+            <option value="APPLICANT">Applicant</option>
+            <option value="CLIENT">Client</option>
+          </select>
+        </label>
+        <label>Username<input name="username" autocomplete="username" minlength="3" required></label>
+        <label>Full name<input name="name" autocomplete="name" required></label>
+        <label>Email<input name="email" type="email" autocomplete="email" required></label>
+        <label>Phone<input name="phone" type="tel" autocomplete="tel"></label>
+        <div class="profile-file-fields">
+          <label>Profile photo (optional)<input name="photo" type="file" accept="image/jpeg,image/png,image/webp"></label>
+          <label>Resume / CV (optional)<input name="resume" type="file" accept=".pdf,.doc,.docx"></label>
+          <p>Photo up to 2 MB. Resume up to 8 MB.</p>
+        </div>
+        <label>Password<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+        <button class="btn" type="submit">Create account</button>
+      </form>
+    </section>
+
+    <section id="accountView" hidden>
+      <div class="portal-account-head">
+        <div>
+          <p class="portal-kicker" id="accountRole"></p>
+          <h1 id="accountName"></h1>
+          <p id="accountEmail" class="portal-intro"></p>
+          <div id="profileDocuments" class="profile-documents" hidden>
+            <img id="profilePhoto" alt="Profile photo" hidden>
+            <a id="profileResume" hidden></a>
+          </div>
+        </div>
+        <button class="btn portal-logout" id="logoutButton" type="button">Logout</button>
+      </div>
+
+      <div class="profile-section" id="profileSection">
+        <div class="profile-section-header">
+          <div>
+            <p class="portal-kicker">ACCOUNT PROFILE</p>
+            <h2>Personal details & documents</h2>
+          </div>
+          <span id="profileCompletionBadge" class="profile-completion-badge" role="status" hidden><span aria-hidden="true">&#10003;</span> Profile completed</span>
+        </div>
+        <div class="profile-form-panel" id="profileFormPanel">
+          <p class="profile-upload-hint">Complete the required personal details to access your portal. Document uploads are optional.</p>
+          <form id="profileForm" class="portal-form">
+          <div class="profile-form-grid">
+            <label>First name<input name="firstName" autocomplete="given-name" required></label>
+            <label>Last name<input name="lastName" autocomplete="family-name" required></label>
+            <label>Date of birth<input name="dateOfBirth" type="date" required></label>
+            <label>Mobile number<input name="phone" type="tel" autocomplete="tel" pattern="\+?[0-9]{8,15}" required></label>
+            <label class="profile-form-wide">Address line 1<input name="addressLine1" autocomplete="address-line1" placeholder="House / flat number, building name" required></label>
+            <label class="profile-form-wide">Address line 2<input name="addressLine2" autocomplete="address-line2" placeholder="Area, locality" required></label>
+            <label>City<input name="city" autocomplete="address-level2" required></label>
+            <label>PIN code<input name="pinCode" type="text" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{6}" maxlength="6" placeholder="6-digit PIN code" required></label>
+          </div>
+          <div class="identity-document-fields">
+            <label>Profile photo<input name="profilePhoto" type="file" accept="image/jpeg,image/png,image/webp"></label>
+            <label>Aadhaar card<input name="aadhaarCard" type="file" accept="application/pdf,image/jpeg,image/png,image/webp"></label>
+            <label>Address proof<input name="addressProof" type="file" accept="application/pdf,image/jpeg,image/png,image/webp"></label>
+            <label>PAN card<input name="panCard" type="file" accept="application/pdf,image/jpeg,image/png,image/webp"></label>
+          </div>
+          <p class="profile-upload-hint">Documents are optional. Choose PDF or image files up to 5 MB each; photo limit is 2 MB. Selecting a new file replaces the saved file for that item.</p>
+            <button class="btn" type="submit">Save profile</button>
+          </form>
+        </div>
+        <div id="profileMessage" class="portal-message" role="status" aria-live="polite"></div>
+      </div>
+
+      <section id="applicantArea" hidden>
+        <h2>Open jobs</h2>
+        <div class="job-browser" id="jobBrowser">
+          <div id="jobList" class="portal-list" aria-label="Available jobs"></div>
+          <aside id="jobDetails" class="job-details" aria-live="polite">
+            <p class="portal-empty">Select a job to view its details.</p>
+          </aside>
+        </div>
+        <div id="jobSubmissionSuccess" class="application-success-panel" hidden></div>
+        <h2 class="portal-section-heading">My applications</h2>
+        <div id="applicationList" class="portal-list"></div>
+      </section>
+
+      <section id="clientArea" hidden>
+        <h2>Request staffing support</h2>
+        <form id="clientRequestForm" class="portal-form">
+          <label>Company name<input name="companyName" required></label>
+          <label>Roles or skills needed<input name="rolesNeeded" required placeholder="e.g. production operators, warehouse staff"></label>
+          <label>Number of people<input name="headcount" type="number" min="1" step="1" required></label>
+          <label>Work location<input name="location" required></label>
+          <label>Additional details<textarea name="details" rows="4"></textarea></label>
+          <button class="btn" type="submit">Submit staffing request</button>
+        </form>
+        <h2 class="portal-section-heading">My requests</h2>
+        <div id="clientRequestList" class="portal-list"></div>
+      </section>
+    </section>
+  </div>
+</main>
+<script src="app.js"></script>
+<script src="portal.js"></script>
+</body>
+</html>

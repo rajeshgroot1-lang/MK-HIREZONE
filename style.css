@@ -1,0 +1,170 @@
+
+:root{--primary:#1a3c6e;--accent:#f5a623;--light:#f4f7fb;--dark:#222;--green:#1e8e3e;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;}
+body{background:var(--light);color:var(--dark);line-height:1.6;}
+body.portal-body{isolation:isolate;}
+body.portal-body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(rgba(244,247,251,.38),rgba(244,247,251,.52)),url("portal-background.jpg") center/cover no-repeat;}
+header.topbar{background:var(--primary);color:#fff;padding:8px 5%;}
+.topbar .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;font-size:.85rem;gap:6px;}
+nav.mainnav{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1);position:sticky;top:0;z-index:50;}
+nav.mainnav .wrap{display:flex;align-items:center;justify-content:space-between;padding:12px 5%;flex-wrap:wrap;}
+.logo{font-size:1.5rem;font-weight:800;color:var(--primary);}
+.logo span{color:var(--accent);}
+.logo small{display:block;font-size:.65rem;color:#666;font-weight:400;letter-spacing:1px;}
+nav.mainnav ul{display:flex;list-style:none;gap:22px;flex-wrap:wrap;}
+nav.mainnav a{position:relative;display:inline-block;text-decoration:none;color:var(--dark);font-weight:600;font-size:.95rem;transition:color .18s ease,transform .18s ease;}
+nav.mainnav a::after{position:absolute;right:0;bottom:-5px;left:0;height:2px;background:var(--accent);content:"";transform:scaleX(0);transform-origin:left;transition:transform .18s ease;}
+nav.mainnav a:hover,nav.mainnav a:focus-visible,nav.mainnav a.active{color:var(--primary);}
+nav.mainnav a:hover{transform:translateY(-2px);}
+nav.mainnav a:hover::after,nav.mainnav a:focus-visible::after,nav.mainnav a.active::after{transform:scaleX(1);}
+nav.mainnav a:focus-visible{outline:2px solid #27a8ff;outline-offset:5px;}
+.hero{background:linear-gradient(135deg,#1a3c6e,#2d5ea8);color:#fff;padding:70px 5%;text-align:center;}
+.hero h1{font-size:2.4rem;margin-bottom:12px;}
+.hero h1 span{color:#27a8ff;}
+.hero p{max-width:700px;margin:0 auto 24px;font-size:1.1rem;color:#dfe8f5;}
+.btn{display:inline-block;background:var(--accent);color:#1a1a1a;padding:12px 28px;border:none;border-radius:6px;font-weight:700;text-decoration:none;cursor:pointer;font-size:.95rem;transition:transform .16s ease,box-shadow .16s ease,opacity .16s ease;}
+.btn:hover{opacity:.94;transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.14);}
+.btn:active{transform:translateY(1px) scale(.98);}
+.btn:focus-visible{outline:3px solid #27a8ff;outline-offset:3px;}
+.btn.secondary{background:#fff;color:var(--primary);margin-left:10px;}
+.portal-page{min-height:calc(100vh - 220px);padding:54px 5%;}
+.portal-shell{width:min(100%,600px);min-width:min(400px,100%);max-width:600px;margin:0 auto;padding:34px;background:#fff;border:1px solid #e0e7f0;border-radius:8px;box-shadow:0 8px 24px rgba(17,42,74,.08);animation:fadeUp .35s ease both;}
+.portal-shell > section{padding:0;}
+.portal-shell h1{color:var(--primary);font-size:2rem;line-height:1.2;margin-bottom:8px;}
+.portal-shell h2{margin:20px 0 12px;text-align:left;font-size:1.35rem;}
+.portal-kicker{color:#1674bd;font-size:.78rem;font-weight:800;letter-spacing:.08em;}
+.portal-intro{color:#58677a;margin:0 0 18px;}
+.portal-switch{display:flex;gap:8px;margin:20px 0 8px;}
+.portal-tab{background:#e9eef5;color:var(--primary);}
+.portal-tab.active{background:var(--primary);color:#fff;}
+.portal-message{min-height:24px;color:var(--green);font-weight:600;}
+.portal-message.error{color:#b42318;}
+.portal-form{max-width:100%;margin:12px 0 24px;padding:22px;border:1px solid #e0e7f0;border-radius:8px;box-shadow:none;}
+.portal-form[hidden]{display:none;}
+.portal-form h2{margin:0 0 8px;}
+.portal-form label{display:grid;gap:6px;}
+.password-field-control{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:center;}
+.password-toggle{min-height:40px;padding:7px 10px;border:1px solid #cbd5e1;border-radius:4px;background:#fff;color:var(--primary);font-weight:700;cursor:pointer;}
+.password-toggle:hover{background:#eef3f8;}
+.password-toggle:focus-visible{outline:3px solid #27a8ff;outline-offset:2px;}
+.portal-form [hidden]{display:none!important;}
+.profile-file-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end;}
+.profile-file-fields p{grid-column:1/-1;color:#58677a;font-size:.82rem;margin-top:-8px;}
+.profile-documents{display:flex;align-items:center;gap:14px;margin-top:12px;}
+.profile-documents[hidden],.profile-documents img[hidden],.profile-documents a[hidden]{display:none;}
+.profile-documents img{width:64px;height:64px;object-fit:cover;border-radius:50%;border:2px solid #dfe6ef;}
+.profile-documents a{color:var(--primary);font-weight:700;}
+.profile-section{margin:24px 0 36px;padding:22px 0;border-bottom:1px solid #e0e7f0;}
+.profile-section-header{display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.profile-section h2{margin:4px 0 8px!important;text-align:left;}
+.profile-completion-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border:1px solid #b9e4c4;border-radius:999px;background:#e8f7ec;color:#17753a;font-size:.82rem;font-weight:700;white-space:nowrap;}
+.profile-completion-badge span{display:grid;width:18px;height:18px;place-items:center;border-radius:50%;background:#17753a;color:#fff;font-size:.75rem;}
+.profile-form-panel{max-height:1400px;overflow:hidden;opacity:1;transform:translateY(0);transition:max-height .45s ease,opacity .25s ease,transform .35s ease,margin .35s ease;}
+.profile-section.is-collapsed .profile-form-panel{max-height:0;margin:0;opacity:0;transform:translateY(-8px);pointer-events:none;}
+.profile-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.profile-form-wide{grid-column:1/-1;}
+.identity-document-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:8px;}
+.profile-upload-hint{color:#58677a;font-size:.84rem;}
+.profile-form-grid textarea{resize:vertical;}
+.profile-section .portal-form{margin-bottom:0;}
+.portal-account-head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid #e0e7f0;padding-bottom:20px;margin-bottom:24px;}
+.portal-account-head h1{margin:3px 0;}
+.portal-logout{background:#e9eef5;color:var(--primary);}
+.portal-section-heading{margin-top:34px!important;}
+.portal-list{border-top:1px solid #dfe6ef;}
+.portal-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 4px;border-bottom:1px solid #dfe6ef;}
+.portal-row h3{color:var(--primary);font-size:1rem;margin-bottom:4px;}
+.portal-row p{color:#58677a;font-size:.9rem;margin-top:3px;}
+.application-approved-message{margin-top:8px!important;padding:8px 10px;border-left:3px solid var(--green);background:#eff9f1;color:#17753a!important;font-weight:600;}
+.portal-row .btn{flex:none;}
+.portal-row button:disabled,.portal-form button:disabled{opacity:.65;cursor:wait;}
+.portal-empty{padding:16px 0;color:#58677a;}
+.job-browser{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.9fr);gap:24px;align-items:start;}
+#jobBrowser[hidden],#jobSubmissionSuccess[hidden]{display:none!important;}
+.application-success-panel{min-height:320px;margin:0 0 24px;border:1px solid #dfe6ef;border-radius:8px;background:#f8fbfe;}
+.job-row{border-bottom:1px solid #dfe6ef;}
+.job-select{display:grid;width:100%;gap:5px;padding:16px 12px;border:0;background:transparent;text-align:left;color:var(--dark);cursor:pointer;transition:background .16s ease,transform .16s ease;}
+.job-select:hover,.job-select.selected{background:#eaf3fb;}
+.job-select:active{transform:scale(.99);}
+.job-select:focus-visible{outline:3px solid #27a8ff;outline-offset:-3px;}
+.job-select-title{font-weight:800;color:var(--primary);}
+.job-select-meta{font-size:.85rem;color:#58677a;}
+.job-details{position:sticky;top:24px;min-height:280px;padding:22px;border:1px solid #dfe6ef;border-radius:8px;background:#f8fbfe;animation:fadeUp .2s ease both;}
+.job-details h3{margin:4px 0 6px;color:var(--primary);font-size:1.35rem;}
+.job-detail-meta,.job-description{color:#58677a;margin-bottom:16px;}
+.job-facts{display:grid;gap:10px;padding:14px 0;border-top:1px solid #dfe6ef;border-bottom:1px solid #dfe6ef;}
+.job-facts dt{font-size:.78rem;font-weight:700;color:#58677a;}
+.job-facts dd{font-weight:600;color:var(--dark);}
+.job-responsibilities{padding-left:20px;margin:0 0 18px;color:#40536b;}
+.job-application-form{max-width:100%;margin:18px 0 0;padding:0;background:transparent;box-shadow:none;}
+.job-application-form label{font-size:.9rem;font-weight:700;color:var(--primary);}
+.application-success{display:grid;justify-items:center;align-content:center;gap:12px;min-height:280px;padding:24px;text-align:center;animation:fadeUp .3s ease both;}
+.application-success h3{color:var(--green);font-size:1.25rem;}
+.application-success p{color:#58677a;}
+.application-success-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:4px;}
+.portal-dashboard-return{background:#e9eef5;color:var(--primary);}
+.profile-success{display:flex;align-items:center;gap:12px;padding:12px 0;color:var(--green);font-weight:700;}
+.profile-success .success-check{flex:none;width:56px;}
+.success-check{display:grid;place-items:center;width:72px;aspect-ratio:1;border:3px solid var(--green);border-radius:50%;background:#e5f6eb;animation:successPop .4s ease both;}
+.success-check::after{content:"";width:13px;height:23px;border-right:4px solid var(--green);border-bottom:4px solid var(--green);transform:rotate(45deg) scale(0);animation:successCheck .3s .18s ease-out forwards;}
+.application-success .btn{margin-top:4px;}
+.status-pill{padding:5px 10px;border-radius:999px;background:#edf2f7;color:#40536b;font-size:.78rem;font-weight:700;white-space:nowrap;}
+.status-approved,.status-hired,.status-offered{background:#e5f6eb;color:#17753a;}
+.status-rejected{background:#fdebea;color:#a82920;}
+.status-reviewing,.status-shortlisted,.status-interview,.status-applied,.status-pending{background:#fff4d6;color:#7a5b00;}
+.portal-entry-actions{text-align:center;}
+.home-contact{background:#eaf1f8;}
+.home-about{scroll-margin-top:90px;background:#fff;}
+.home-about-copy{max-width:900px;margin:0 auto;color:#40536b;text-align:center;font-size:1.05rem;}
+.home-contact{scroll-margin-top:90px;}
+.home-contact-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:28px;max-width:1050px;margin:20px auto 0;}
+.home-contact-details h3{margin-bottom:6px;color:var(--primary);}
+.home-contact-details a{color:var(--primary);font-weight:700;}
+.home-contact-details address{font-style:normal;color:#40536b;}
+.home-contact-details p{margin-bottom:12px;color:#40536b;}
+section{padding:50px 5%;}
+section h2{text-align:center;color:var(--primary);margin-bottom:8px;font-size:1.8rem;}
+.sub{text-align:center;color:#666;margin-bottom:34px;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;max-width:1200px;margin:0 auto;}
+.card{background:#fff;border-radius:10px;padding:26px;box-shadow:0 3px 12px rgba(0,0,0,.07);transition:.2s;}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.12);}
+.card h3{color:var(--primary);margin-bottom:10px;}
+.card ul{margin-left:18px;color:#444;font-size:.93rem;}
+.strip{background:var(--primary);color:#fff;text-align:center;padding:34px 5%;}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;max-width:1000px;margin:0 auto;text-align:center;}
+.stat h3{font-size:2rem;color:var(--accent);}
+footer{background:#142c50;color:#c9d6ea;padding:34px 5%;margin-top:20px;}
+footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:24px;max-width:1200px;margin:0 auto;}
+footer h4{color:#fff;margin-bottom:10px;}
+footer a{color:#c9d6ea;text-decoration:none;display:block;margin-bottom:6px;font-size:.9rem;}
+footer a:hover{color:var(--accent);}
+.copy{text-align:center;margin-top:24px;font-size:.8rem;color:#8fa5c4;border-top:1px solid #26416e;padding-top:16px;}
+form{display:grid;gap:14px;max-width:640px;margin:0 auto;background:#fff;padding:30px;border-radius:10px;box-shadow:0 3px 12px rgba(0,0,0,.07);}
+label{font-weight:600;font-size:.9rem;}
+input,select,textarea{padding:11px 12px;border:1px solid #ccc;border-radius:6px;font-size:.95rem;width:100%;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);}
+table{width:100%;border-collapse:collapse;background:#fff;}
+th,td{padding:10px 12px;border:1px solid #e3e8f0;text-align:left;font-size:.9rem;}
+th{background:var(--primary);color:#fff;}
+.price-table td:last-child{font-weight:600;color:var(--green);}
+.notice{background:#fff8e6;border:1px solid #f0d48a;color:#7a5b00;padding:10px 14px;border-radius:6px;font-size:.88rem;}
+.upload-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;}
+.upload-box{background:#f8fbff;border:1px dashed #9bb7d9;border-radius:10px;padding:14px;animation:fadeUp .5s ease;}
+.upload-box input[type="file"]{padding:10px;border-style:dashed;background:#fff;}
+.applicant-thumb{width:50px;height:50px;object-fit:cover;border-radius:50%;border:2px solid var(--primary);box-shadow:0 4px 12px rgba(26,60,110,.18);animation:popIn .35s ease;}
+.resume-link{color:var(--primary);font-weight:700;text-decoration:none;}
+.resume-link:hover{color:var(--accent);}
+.card,.stat,.portal-shell,.portal-form,.job-details,.application-success-panel,.application-success,.upload-box,.admin-topbar,.admin-table,.admin-placeholder,.hr-placeholder,.company-gallery-form,.company-gallery-card,.settings-grid form,.admin-credentials-form,.public-gallery-card,.home-contact-details>div{animation:boxEnter .42s ease both;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;}
+.card:hover,.stat:hover,.portal-shell:hover,.portal-form:hover,.job-details:hover,.application-success-panel:hover,.upload-box:hover,.admin-topbar:hover,.admin-table:hover,.hr-placeholder:hover,.company-gallery-form:hover,.company-gallery-card:hover,.settings-grid form:hover,.admin-credentials-form:hover,.public-gallery-card:hover,.home-contact-details>div:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(26,60,110,.12);}
+.company-gallery-card:hover,.public-gallery-card:hover{border-color:#c6d8ed;}
+.cards>.card:nth-child(2),.stats>.stat:nth-child(2){animation-delay:.06s;}
+.cards>.card:nth-child(3),.stats>.stat:nth-child(3){animation-delay:.12s;}
+.cards>.card:nth-child(4),.stats>.stat:nth-child(4){animation-delay:.18s;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+@keyframes boxEnter{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes successPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+@keyframes successCheck{to{transform:rotate(45deg) scale(1)}}
+@media(prefers-reduced-motion:reduce){.card,.stat,.portal-shell,.portal-form,.job-details,.application-success-panel,.application-success,.upload-box,.admin-topbar,.admin-table,.admin-placeholder,.hr-placeholder,.company-gallery-form,.company-gallery-card,.settings-grid form,.admin-credentials-form,.public-gallery-card,.home-contact-details>div{animation:none!important;transition:none!important}.card:hover,.stat:hover,.portal-shell:hover,.portal-form:hover,.job-details:hover,.application-success-panel:hover,.upload-box:hover,.admin-topbar:hover,.admin-table:hover,.hr-placeholder:hover,.company-gallery-form:hover,.company-gallery-card:hover,.settings-grid form:hover,.admin-credentials-form:hover,.public-gallery-card:hover,.home-contact-details>div:hover{transform:none;box-shadow:inherit}.application-success,.success-check,.success-check::after{animation:none}.profile-form-panel{transition:none}.success-check::after{transform:rotate(45deg) scale(1)}}
+@media(max-width:700px){.job-browser{grid-template-columns:1fr}.job-details{position:static;min-height:0}}
+@media(max-width:640px){.hero h1{font-size:1.7rem}nav.mainnav ul{gap:12px}.portal-page{padding:28px 4%}.portal-shell{padding:20px 16px}.portal-account-head,.portal-row{align-items:flex-start;flex-direction:column}.portal-account-head{gap:12px}.portal-row .btn{width:100%}.portal-switch .btn{flex:1}.portal-form{padding:16px}.profile-file-fields,.home-contact-details,.profile-form-grid,.identity-document-fields{grid-template-columns:1fr}.profile-form-wide{grid-column:auto}.profile-section-header{align-items:flex-start;flex-direction:column}}

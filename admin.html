@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — MK Hire Zone</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.admin-body{background:#f4f6fb;color:#17213e;}
+.admin-body>header.topbar,.admin-body>nav.mainnav,.admin-body>footer{display:none;}
+.admin-login-screen{display:grid;min-height:100vh;place-items:center end;padding:40px clamp(24px,8vw,120px) 40px 24px!important;background:#f7faff url("admin-login-hero.png") center/cover no-repeat;}
+#loginCard{width:min(100%,420px);margin:0;padding:34px;border:1px solid rgba(255,255,255,.75);border-radius:16px;background:rgba(255,255,255,.94);box-shadow:0 24px 70px rgba(26,45,100,.2);backdrop-filter:blur(12px);animation:adminLoginEnter .7s cubic-bezier(.2,.75,.25,1) both;}
+#loginCard h2{margin:0 0 8px;text-align:left!important;font-size:1.6rem;}
+.admin-dashboard{padding:0!important;background:#f4f6fb;}
+.admin-layout{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh;}
+.admin-sidebar{position:sticky;top:0;display:flex;flex-direction:column;min-height:100vh;padding:28px 16px 22px;background:linear-gradient(155deg,#5900e8 0%,#4c28ee 48%,#3269ee 100%);color:#fff;}
+.admin-brand{display:block;width:164px;max-width:100%;height:auto;align-self:flex-start;margin:0 8px 8px;border-radius:5px;background:#fff;}
+.admin-avatar{display:grid;width:72px;aspect-ratio:1;place-items:center;margin:30px 0 10px 12px;border:2px solid rgba(255,255,255,.72);border-radius:50%;background:rgba(255,255,255,.16);font-size:1.4rem;font-weight:800;}
+.admin-side-label{margin:0 12px 24px;color:rgba(255,255,255,.8);font-size:.76rem;font-weight:700;}
+.admin-nav-heading{margin:0 12px 10px;color:rgba(255,255,255,.68);font-size:.72rem;font-weight:800;text-transform:uppercase;}
+.tabs{display:grid;gap:5px;margin:0;}
+.tab{width:100%;min-height:48px;padding:12px 14px;border:0;border-radius:4px;background:transparent;color:rgba(255,255,255,.82);text-align:left;font:inherit;font-size:.9rem;font-weight:600;cursor:pointer;transition:background .18s ease,color .18s ease;}
+.tab:hover{background:rgba(255,255,255,.11);color:#fff;}
+.tab:focus-visible{outline:2px solid #8befff;outline-offset:2px;}
+.tab.active{border-left:4px solid #20e6df;border-radius:0 4px 4px 0;background:rgba(255,255,255,.16);color:#fff;}
+.admin-workspace{min-width:0;padding:28px clamp(18px,3vw,44px) 52px;}
+.admin-topbar{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:28px;padding:18px 22px;border:1px solid #e8ebf3;border-radius:8px;background:#fff;box-shadow:0 8px 26px rgba(29,41,75,.06);}
+.admin-breadcrumb{margin-bottom:4px;color:#64708b;font-size:.76rem;font-weight:700;text-transform:uppercase;}
+.admin-topbar h1{color:#182443;font-size:1.7rem;line-height:1.2;}
+.admin-topbar p:last-child{margin-top:5px;color:#66718a;font-size:.9rem;}
+.admin-logout{flex:none;padding:10px 18px;border:0;border-radius:5px;background:linear-gradient(110deg,#ff7656,#fa465f);color:#fff;font-size:.86rem;font-weight:700;cursor:pointer;}
+.admin-content{min-width:0;}
+.admin-section-title{margin:20px 0 10px;color:#182443;font-size:1.08rem;}
+.hr-placeholder{padding:24px;border:1px solid #e8ebf3;border-radius:8px;background:#fff;box-shadow:0 8px 28px rgba(29,41,75,.06);}
+.hr-placeholder h2{margin:4px 0 8px;color:#182443;text-align:left;font-size:1.35rem;}
+.hr-placeholder p:last-child{color:#66718a;}
+.panel{display:none;}
+.panel.on{display:block;animation:adminPanelIn .22s ease both;}
+.panel>form:not(.account-credentials),.settings-grid form{border:1px solid #e8ebf3;border-radius:8px;background:#fff;box-shadow:0 8px 28px rgba(29,41,75,.06);}
+.panel h3{color:#182443;}
+.panel .sub{color:#66718a;}
+.admin-table{max-width:none;margin:0;overflow-x:auto;border:1px solid #e8ebf3;border-radius:8px;background:#fff;box-shadow:0 8px 28px rgba(29,41,75,.06);}
+.admin-table table{min-width:680px;}
+.admin-table th{background:#f0f2fa;color:#394666;}
+.admin-table td{background:#fff;}
+.admin-table{max-width:1000px;margin:0 auto;overflow-x:auto;}
+.applicant-detail-container{width:100%;max-width:none;margin:0;}
+.hr-records-container{width:100%;max-width:none;margin:0;overflow-x:auto;}
+#hrRecordsTable{width:100%;min-width:1680px;table-layout:fixed;}
+#hrRecordsTable th:nth-child(1),#hrRecordsTable td:nth-child(1){width:170px;}
+#hrRecordsTable th:nth-child(2),#hrRecordsTable td:nth-child(2){width:210px;}
+#hrRecordsTable th:nth-child(3),#hrRecordsTable td:nth-child(3){width:260px;}
+#hrRecordsTable th:nth-child(4),#hrRecordsTable td:nth-child(4){width:130px;}
+#hrRecordsTable th:nth-child(5),#hrRecordsTable td:nth-child(5){width:300px;}
+#hrRecordsTable th:nth-child(6),#hrRecordsTable td:nth-child(6){width:260px;}
+#hrRecordsTable th:nth-child(7),#hrRecordsTable td:nth-child(7){width:130px;}
+#hrRecordsTable th:nth-child(8),#hrRecordsTable td:nth-child(8){width:180px;}
+#hrRecordsTable th:nth-child(9),#hrRecordsTable td:nth-child(9){width:140px;}
+#hrRecordsTable .admin-profile-details,#hrRecordsTable .admin-profile-docs{min-width:0;overflow-wrap:anywhere;}
+#hrRecordsTable .admin-profile-docs{gap:8px;}
+#hrRecordsTable .applicant-thumb{width:76px;height:76px;}
+#hrRecordsTable .hr-start-date{box-sizing:border-box;width:100%;min-width:160px;}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:.78rem;font-weight:700;}
+.badge.job{background:#e3f0ff;color:#1a3c6e;}
+.badge.client{background:#fff3d6;color:#8a6200;}
+.danger{background:#d93025;color:#fff;border:none;padding:6px 12px;border-radius:5px;cursor:pointer;font-size:.8rem;}
+.danger{transition:transform .16s ease,opacity .16s ease;}
+.danger:hover{opacity:.9;transform:translateY(-1px);}
+.danger:active{transform:scale(.97);}
+.secondary-btn{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border:1px solid #d7e0ee;border-radius:6px;background:#eef3f8;color:var(--primary);font-weight:700;cursor:pointer;text-decoration:none;transition:transform .16s ease,background .16s ease;}
+.secondary-btn:hover{background:#e1eaf4;transform:translateY(-1px);}
+.secondary-btn:active{transform:scale(.98);}
+.admin-actions{display:flex;gap:6px;min-width:240px;}
+.admin-profile-details{min-width:200px;}
+.admin-profile-details summary{color:var(--primary);font-weight:700;cursor:pointer;}
+.admin-profile-details dl{display:grid;grid-template-columns:auto minmax(120px,1fr);gap:4px 8px;margin-top:8px;font-size:.82rem;}
+.admin-profile-details dt{font-weight:700;color:#58677a;}
+.admin-profile-docs{display:grid;gap:4px;min-width:160px;}
+.admin-profile-docs a{color:var(--primary);font-size:.84rem;}
+.hr-start-date{min-width:145px;}
+.company-gallery-form{max-width:720px;margin:0 0 24px;padding:22px;border:1px solid #e8ebf3;border-radius:8px;background:#fff;box-shadow:0 8px 28px rgba(29,41,75,.06);}
+.company-gallery-form h3{margin-top:0;}
+.company-gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+.company-gallery-card{overflow:hidden;border:1px solid #e8ebf3;border-radius:8px;background:#fff;box-shadow:0 5px 18px rgba(29,41,75,.06);}
+.company-gallery-card img{display:block;width:100%;height:180px;object-fit:cover;background:#f0f2fa;}
+.company-gallery-card-content{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;}
+.company-gallery-card-content strong{overflow-wrap:anywhere;}
+.company-gallery-card-description{padding:0 12px 12px;color:#66718a;font-size:.9rem;overflow-wrap:anywhere;}
+.company-gallery-empty{padding:18px;border:1px dashed #cbd5e1;border-radius:8px;color:#66718a;}
+.account-credentials{display:grid;grid-template-columns:minmax(140px,1fr) minmax(160px,1fr) auto;align-items:end;gap:8px;min-width:520px;margin:0;padding:0;background:none;box-shadow:none;}
+.account-credentials label{font-size:.78rem;}
+.account-credentials input{padding:8px;}
+.account-credentials button{white-space:nowrap;}
+.admin-credentials-form{max-width:560px;margin:0 auto 24px;}
+.admin-credentials-form h3{color:var(--primary);}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;max-width:none;margin:0 auto;}
+.settings-grid form{margin:0;}
+.sk-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@keyframes adminPanelIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes adminLoginEnter{from{opacity:0;transform:translate3d(42px,0,0) scale(.98)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
+@media(prefers-reduced-motion:reduce){#loginCard{animation:none}}
+@media(max-width:900px){.admin-layout{grid-template-columns:205px minmax(0,1fr)}.admin-workspace{padding:22px 18px 40px}.admin-topbar{padding:16px}.settings-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.admin-layout{grid-template-columns:1fr}.admin-sidebar{position:static;min-height:0;padding:18px 14px}.admin-brand{width:88px;align-self:center;margin:0 auto 8px}.admin-avatar,.admin-side-label,.admin-nav-heading{display:none}.tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin-top:14px}.tab{min-height:42px;padding:9px 10px;font-size:.82rem}.admin-workspace{padding:18px 12px 32px}.admin-topbar{align-items:flex-start;padding:16px;}.admin-topbar h1{font-size:1.4rem}.admin-logout{padding:9px 12px}.admin-table table{min-width:680px}.admin-login-screen{place-items:center;padding:24px!important;background-position:42% center}#loginCard{padding:24px}}
+</style></head><body class="admin-body">
+
+<!-- LOGIN -->
+<section id="loginSec" class="admin-login-screen">
+  <form id="loginCard">
+    <h2 style="text-align:center;color:var(--primary)">Admin Login</h2>
+    <div><label>Username or email</label><input id="user" autocomplete="username" placeholder="Username or email" required></div>
+    <div><label>Password</label><input id="pass" type="password" autocomplete="current-password" placeholder="Password" required></div>
+    <button class="btn" type="submit">Login</button>
+    <div class="notice" id="err" style="display:none;background:#fdecea;border-color:#f5c6c0;color:#a02010">Invalid username or password.</div>
+  </form>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dash" class="admin-dashboard" style="display:none">
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <img class="admin-brand" src="admin-logo.png" alt="MK Hire Zone">
+      <div class="admin-avatar" aria-hidden="true">MK</div>
+      <p class="admin-side-label">ADMINISTRATOR</p>
+      <p class="admin-nav-heading">Main menu</p>
+      <nav class="tabs" aria-label="Admin dashboard sections">
+        <button class="tab active" type="button" data-p="enq">Enquiries (<span id="enqCount">0</span>)</button>
+        <button class="tab" type="button" data-p="applicants">Applicants (<span id="appCount">0</span>)</button>
+        <button class="tab" type="button" data-p="hr">HR Dashboard</button>
+        <button class="tab" type="button" data-p="jobs">Post Jobs</button>
+        <button class="tab" type="button" data-p="clientRequests">Client Requests</button>
+        <button class="tab" type="button" data-p="accounts">Accounts & Permissions</button>
+        <button class="tab" type="button" data-p="salary">Salary Settings</button>
+        <button class="tab" type="button" data-p="att">Attendance Settings</button>
+        <button class="tab" type="button" data-p="site">Company / Site Text</button>
+        <button class="tab" type="button" data-p="gallery">Company Gallery</button>
+      </nav>
+    </aside>
+    <main class="admin-workspace">
+      <header class="admin-topbar">
+        <div>
+          <p class="admin-breadcrumb">MK Hire Zone / Administration</p>
+          <h1>Admin Dashboard</h1>
+          <p>Manage enquiries, applicants, staffing and site settings.</p>
+        </div>
+        <button class="admin-logout" type="button" onclick="logout()">Logout</button>
+      </header>
+      <div class="admin-content">
+
+  <div class="panel on" id="p-enq">
+    <div class="admin-table"><table id="enqTable"></table></div>
+    <p class="sub" id="noEnq" style="margin-top:16px">No enquiries yet. Submissions from the Enquire / Apply page appear here.</p>
+  </div>
+
+  <div class="panel" id="p-applicants">
+    <h3 class="admin-section-title">Applicants and applications</h3>
+    <p class="sub">Review website submissions, applicant profiles, and portal job applications together.</p>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+      <button class="btn" type="button" id="exportApplicants">Export Excel</button>
+    </div>
+    <div class="admin-table applicant-detail-container"><table id="appTable"></table></div>
+    <p class="sub" id="noApplicant" style="margin-top:16px">No applicants yet. Candidate applications and client enquiries will appear here.</p>
+  </div>
+
+  <div class="panel" id="p-hr">
+    <p class="sub">Applicants are added here when their job application is approved. Set or update each employee's start date.</p>
+    <div class="admin-table hr-records-container"><table id="hrRecordsTable"></table></div>
+    <p class="sub" id="noHrRecords" style="margin-top:16px">No approved applicants yet.</p>
+  </div>
+
+  <div class="panel" id="p-jobs">
+    <form id="jobForm" style="max-width:720px">
+      <h3>Publish a job</h3>
+      <input type="hidden" name="jobId">
+      <div><label>Job title *</label><input name="title" required></div>
+      <div><label>Department *</label><input name="department" required></div>
+      <div><label>Location *</label><input name="location" required></div>
+      <div><label>Employment type *</label><select name="employmentType" required><option value="Full-Time">Full-Time</option><option value="Part-Time">Part-Time</option><option value="Contract">Contract</option><option value="Temporary">Temporary</option></select></div>
+      <div><label>Experience</label><input name="experience" placeholder="e.g. 1-3 years"></div>
+      <div><label>Salary</label><input name="salary" placeholder="e.g. ₹18,000 - ₹30,000"></div>
+      <div><label>Description *</label><textarea name="description" rows="4" required></textarea></div>
+      <div><label>Qualifications</label><input name="qualifications"></div>
+      <div><label>Responsibilities (one per line)</label><textarea name="responsibilities" rows="3"></textarea></div>
+      <button class="btn" type="submit">Publish job</button>
+      <button class="secondary-btn" id="cancelJobEdit" type="button" hidden>Cancel edit</button>
+      <div class="notice" id="jobPostMessage" hidden></div>
+    </form>
+    <div class="admin-table" style="margin-top:24px"><table id="apiJobsTable"></table></div>
+  </div>
+
+  <div class="panel" id="p-clientRequests">
+    <div class="admin-table"><table id="apiClientRequestTable"></table></div>
+  </div>
+
+  <div class="panel" id="p-accounts">
+    <form id="adminCredentialsForm" class="admin-credentials-form">
+      <h3>Change admin login</h3>
+      <label>Current admin password<input name="currentPassword" type="password" autocomplete="current-password" required></label>
+      <label>New admin username<input name="username" minlength="3" autocomplete="username" required></label>
+      <label>New admin password<input name="password" type="password" minlength="8" autocomplete="new-password" required></label>
+      <label>Confirm new password<input name="confirmPassword" type="password" minlength="8" autocomplete="new-password" required></label>
+      <button class="btn" type="submit">Update admin login</button>
+      <div class="notice" id="adminCredentialsMessage" role="status" aria-live="polite" hidden></div>
+    </form>
+    <p class="sub">Manage portal accounts and view submitted profiles.</p>
+    <p class="notice" id="accountsMessage" role="status" aria-live="polite" hidden></p>
+    <div class="admin-table"><table id="adminAccountsTable"></table></div>
+  </div>
+
+  <div class="panel" id="p-salary">
+    <div class="settings-grid" id="skillForms"></div>
+    <p class="sub" style="margin-top:14px">Changes are saved in this browser and appear on this device.</p>
+  </div>
+
+  <div class="panel" id="p-att">
+    <form id="attForm" style="max-width:560px">
+      <h3>Attendance & Working Rules</h3>
+      <div><label>Working days per month</label><input type="number" id="aDays" min="1" max="31"></div>
+      <div><label>Shift pattern</label><input id="aShifts"></div>
+      <div><label>Overtime multiplier (x)</label><input type="number" id="aOT" step="0.1" min="1"></div>
+      <div><label>Loss of Pay rule</label><input id="aLOP"></div>
+      <button class="btn" type="submit">Save Attendance Settings</button>
+      <div class="notice" id="attOk" style="display:none">Saved. Payroll page updated live.</div>
+    </form>
+  </div>
+
+  <div class="panel" id="p-site">
+    <form id="siteForm" style="max-width:560px">
+      <h3>Company / Site Text</h3>
+      <div><label>Company name</label><input id="sComp"></div>
+      <div><label>Tagline</label><input id="sTag"></div>
+      <div><label>Contact phones</label><input id="sPhone"></div>
+      <div><label>Email</label><input id="sEmail"></div>
+      <button class="btn" type="submit">Save changes</button>
+      <div class="notice" id="siteOk" style="display:none">Saved in this browser.</div>
+    </form>
+  </div>
+
+  <div class="panel" id="p-gallery">
+    <h3 class="admin-section-title">Company image gallery</h3>
+    <p class="sub">Upload company photos to display on the public Gallery page. Supported image files up to 5 MB each.</p>
+    <form id="companyGalleryForm" class="company-gallery-form">
+      <label for="companyGalleryFiles">Choose company images</label>
+      <input id="companyGalleryFiles" name="images" type="file" accept="image/*" multiple required>
+      <label for="companyGalleryDescription">Image description (used for all selected images)</label>
+      <textarea id="companyGalleryDescription" name="description" rows="3" maxlength="500" placeholder="Describe the company photo or activity"></textarea>
+      <button class="btn" type="submit">Upload images</button>
+      <div id="companyGalleryMessage" class="notice" role="status" aria-live="polite" hidden></div>
+    </form>
+    <div id="adminCompanyGallery" class="company-gallery-grid" aria-live="polite"></div>
+  </div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<script src="app.js"></script>
+<script>
+const KEY = 'mkhz_admin_local';
+const ADMIN_CREDENTIALS_KEY = 'mkhz_admin_credentials';
+const DEFAULT_ADMIN_USERNAME = 'Rajesh@';
+const DEFAULT_ADMIN_PASSWORD = 'Rajesh@123';
+const JOBS_KEY = 'mkhz_portal_jobs';
+const APPLICATIONS_KEY = 'mkhz_portal_applications';
+const CLIENT_REQUESTS_KEY = 'mkhz_portal_client_requests';
+const USERS_KEY = 'mkhz_portal_users';
+const HR_RECORDS_KEY = 'mkhz_portal_hr_records';
+const adminFileUrls = new Map();
+const GALLERY_DB_NAME = 'mkhz_company_gallery';
+const GALLERY_STORE_NAME = 'images';
+const ADMIN_GALLERY_MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+let adminGalleryUrls = [];
+
+function readAdminStore(key){
+  try { return JSON.parse(localStorage.getItem(key)) || []; }
+  catch { return []; }
+}
+function writeAdminStore(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
+
+function getAdminCredentials(){
+  try { return JSON.parse(localStorage.getItem(ADMIN_CREDENTIALS_KEY)); }
+  catch { return null; }
+}
+
+async function checkAdminLogin(username, password){
+  const credentials = getAdminCredentials();
+  if (!credentials) return username === DEFAULT_ADMIN_USERNAME && password === DEFAULT_ADMIN_PASSWORD;
+  if (username.toLowerCase() !== credentials.username.toLowerCase()) return false;
+  const passwordHash = await hashAdminPassword(password, credentials.passwordSalt);
+  return passwordHash.hash === credentials.passwordHash;
+}
+
+async function checkCurrentAdminPassword(password){
+  const credentials = getAdminCredentials();
+  if (!credentials) return password === DEFAULT_ADMIN_PASSWORD;
+  const passwordHash = await hashAdminPassword(password, credentials.passwordSalt);
+  return passwordHash.hash === credentials.passwordHash;
+}
+
+function showDash(){ document.getElementById('loginSec').style.display='none'; document.getElementById('dash').style.display='block'; renderAll(); }
+function logout(){ sessionStorage.removeItem(KEY); location.reload(); }
+
+document.getElementById('loginCard').addEventListener('submit', async e => {
+  e.preventDefault();
+  const errorBox = document.getElementById('err');
+  const loginButton = e.currentTarget.querySelector('button[type="submit"]');
+  errorBox.style.display = 'none';
+  loginButton.disabled = true;
+  loginButton.textContent = 'Signing in...';
+  try {
+    const username = document.getElementById('user').value.trim();
+    const password = document.getElementById('pass').value;
+    if (!await checkAdminLogin(username, password)) throw new Error('Invalid username or password.');
+    sessionStorage.setItem(KEY, '1');
+    showDash();
+  } catch (error) {
+    errorBox.textContent = error.message;
+    errorBox.style.display = 'block';
+  } finally {
+    loginButton.disabled = false;
+    loginButton.textContent = 'Login';
+  }
+});
+
+document.getElementById('adminCredentialsForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+  const message = document.getElementById('adminCredentialsMessage');
+  const fields = Object.fromEntries(new FormData(form));
+  message.hidden = true;
+  if (fields.password !== fields.confirmPassword) {
+    message.textContent = 'The new passwords do not match.';
+    message.hidden = false;
+    return;
+  }
+  button.disabled = true;
+  button.textContent = 'Updating...';
+  try {
+    if (!await checkCurrentAdminPassword(fields.currentPassword)) throw new Error('Current admin password is incorrect.');
+    const credentials = await hashAdminPassword(fields.password);
+    writeAdminStore(ADMIN_CREDENTIALS_KEY, {
+      username: fields.username.trim(),
+      passwordSalt: credentials.salt,
+      passwordHash: credentials.hash
+    });
+    form.reset();
+    message.textContent = 'Admin login updated. Use the new username and password next time you sign in.';
+    message.hidden = false;
+  } catch (error) {
+    message.textContent = error.message;
+    message.hidden = false;
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Update admin login';
+  }
+});
+
+if (sessionStorage.getItem(KEY) === '1') showDash();
+
+document.getElementById('exportApplicants').addEventListener('click', exportAdminApplicantsCsv);
+
+function exportAdminApplicantsCsv(){
+  const websiteSubmissions = getApplicants();
+  const users = readAdminStore(USERS_KEY);
+  const jobs = readAdminStore(JOBS_KEY);
+  const applications = readAdminStore(APPLICATIONS_KEY);
+  const headers = [
+    'Source', 'Date', 'Applicant', 'Username', 'Email', 'Phone', 'Type',
+    'Job title', 'Department', 'Location', 'Qualification', 'Experience',
+    'Skill', 'Application message', 'Status', 'Resume file', 'Photo file'
+  ];
+  const rows = [
+    ...websiteSubmissions.map(item => ({
+      Source: 'Website',
+      Date: item.date,
+      Applicant: item.name,
+      Email: item.email,
+      Phone: item.phone,
+      Type: item.type,
+      Location: item.location,
+      Qualification: item.qualification,
+      Experience: item.exp,
+      Skill: item.skill,
+      'Application message': item.msg || item.message,
+      Status: 'Received',
+      'Resume file': item.resumeName,
+      'Photo file': item.photoName
+    })),
+    ...applications.map(application => {
+      const applicant = users.find(user => user.id === application.userId) || {};
+      const job = jobs.find(item => item.id === application.jobId) || {};
+      return {
+        Source: 'Portal',
+        Date: application.createdAt,
+        Applicant: fullApplicantName(applicant),
+        Username: applicant.username,
+        Email: applicant.email,
+        Phone: applicant.phone,
+        Type: applicant.role,
+        'Job title': job.title || 'Job removed',
+        Department: job.department,
+        Location: job.location,
+        'Application message': application.coverLetter,
+        Status: application.status || 'APPLIED'
+      };
+    })
+  ];
+  if (!rows.length){
+    alert('No applications to export yet.');
+    return;
+  }
+
+  const csvCell = value => {
+    const text = String(value ?? '');
+    const safeText = /^[\t\r ]*[=+\-@]/.test(text) ? `'${text}` : text;
+    return `"${safeText.replace(/"/g, '""')}"`;
+  };
+  const csv = [
+    headers.map(csvCell).join(','),
+    ...rows.map(row => headers.map(header => csvCell(row[header])).join(','))
+  ].join('\r\n');
+  const blob = new Blob(['\ufeff', csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'mkhirezone_applicants.csv';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// Tabs
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
+  t.classList.add('active');
+  document.getElementById('p-'+t.dataset.p).classList.add('on');
+}));
+
+function renderAll(){ renderEnq(); renderApplicants(); renderSkills(); renderAtt(); renderSite(); loadPostedJobs(); loadClientRequestsForReview(); loadAdminAccounts(); loadHRRecords(); loadAdminCompanyGallery(); }
+
+// ---- Enquiries ----
+function renderEnq(){
+  const l = getEnquiries();
+  document.getElementById('enqCount').textContent = l.length;
+  document.getElementById('noEnq').style.display = l.length ? 'none' : 'block';
+  let h = '<tr><th>#</th><th>Date</th><th>Type</th><th>Name</th><th>Phone</th><th>Email</th><th>Skill / Req.</th><th>Exp</th><th>Message</th><th></th></tr>';
+  l.forEach((e,i) => {
+    h += `<tr><td>${i+1}</td><td>${e.date||'-'}</td>
+      <td><span class="badge ${e.type==='Client'?'client':'job'}">${e.type}</span></td>
+      <td>${esc(e.name)}</td><td>${esc(e.phone)}</td><td>${esc(e.email)||'-'}</td>
+      <td>${esc(e.skill)}</td><td>${esc(e.exp)||'-'}</td><td>${esc(e.msg)}</td>
+      <td><button class="danger" onclick="del(${i})">Delete</button></td></tr>`;
+  });
+  document.getElementById('enqTable').innerHTML = h;
+}
+function del(i){ if(confirm('Delete this enquiry?')){ deleteEnquiry(i); renderEnq(); } }
+
+function renderApplicants(){
+  const websiteSubmissions = getApplicants();
+  const users = readAdminStore(USERS_KEY);
+  const jobs = readAdminStore(JOBS_KEY);
+  const applications = readAdminStore(APPLICATIONS_KEY);
+  const totalRecords = websiteSubmissions.length + applications.length;
+  const table = document.getElementById('appTable');
+  document.getElementById('appCount').textContent = totalRecords;
+  document.getElementById('noApplicant').style.display = totalRecords ? 'none' : 'block';
+  const headers = '<tr><th>Source</th><th>Applicant</th><th>Contact</th><th>Profile details</th><th>Photo</th><th>Documents</th><th>Application details</th><th>Submitted</th><th>Status / decision</th><th>Manage</th></tr>';
+  const websiteRows = websiteSubmissions.map((item, index) => {
+    const photo = item.photo ? `<img class="applicant-thumb" src="${esc(item.photo)}" alt="${esc(item.name)} photo">` : '-';
+    const resume = item.resume ? `<a class="resume-link" href="${esc(item.resume)}" download="${esc(item.resumeName || 'resume')}" target="_blank" rel="noopener noreferrer">${esc(item.resumeName || 'View resume')}</a>` : '-';
+    const profile = `<details class="admin-profile-details"><summary>View details</summary><dl><dt>Qualification</dt><dd>${esc(item.qualification || '-')}</dd><dt>Location</dt><dd>${esc(item.location || '-')}</dd><dt>Experience</dt><dd>${esc(item.exp || '-')}</dd></dl></details>`;
+    const applicationDetails = `<strong>${esc(item.skill || item.type || 'Application')}</strong><p>${esc(item.msg || '-')}</p>`;
+    const contact = `${esc(item.email || '-')}<br>${esc(item.phone || '-')}`;
+    return `<tr><td><span class="badge ${item.type === 'Client' ? 'client' : 'job'}">Website</span></td><td>${esc(item.name || 'Unknown')}</td><td>${contact}</td><td>${profile}</td><td>${photo}</td><td>${resume}</td><td>${applicationDetails}</td><td>${esc(item.date || '-')}</td><td>Received</td><td><button class="danger" onclick="delApplicant(${index})">Delete</button></td></tr>`;
+  });
+  const applicationRows = applications.map((application) => {
+    const applicant = users.find((user) => user.id === application.userId) || {};
+    const job = jobs.find((item) => item.id === application.jobId) || {};
+    const statuses = ['APPLIED', 'REVIEWING', 'APPROVED', 'REJECTED', 'SHORTLISTED', 'INTERVIEW', 'OFFERED', 'HIRED'];
+    const status = application.status || 'APPLIED';
+    const approvalButton = `<button class="secondary-btn" type="button" data-application-approve="${esc(application.id)}" ${status === 'APPROVED' ? 'disabled' : ''}>${status === 'APPROVED' ? 'Approved' : 'Approve'}</button>`;
+    const actions = `<div class="admin-actions">${approvalButton}<select aria-label="Application status" data-application-status="${esc(application.id)}">${statuses.map((item) => `<option value="${item}" ${status === item ? 'selected' : ''}>${item.replaceAll('_', ' ')}</option>`).join('')}</select></div>`;
+    const photo = applicant.photoId ? `<img class="applicant-thumb" data-upload-id="${esc(applicant.photoId)}" data-upload-kind="photo" alt="Applicant photo" hidden>` : '-';
+    const documents = [
+      ['Resume', applicant.resumeId],
+      ['Aadhaar card', applicant.aadhaarCardId],
+      ['Address proof', applicant.addressProofId],
+      ['PAN card', applicant.panCardId]
+    ].filter(([, id]) => id);
+    const archiveFiles = [['Profile photo', applicant.photoId], ...documents].filter(([, id]) => id).map(([label, id]) => ({ label, id }));
+    const documentLinks = documents.length ? `<div class="admin-profile-docs">${documents.map(([label, id]) => `<a data-upload-id="${esc(id)}" data-upload-kind="document" data-upload-label="${esc(label)}" target="_blank" rel="noopener noreferrer">Loading...</a>`).join('')}${archiveButton(archiveFiles, fullApplicantName(applicant))}</div>` : (archiveFiles.length ? archiveButton(archiveFiles, fullApplicantName(applicant)) : '-');
+    const fullName = `${applicant.firstName || ''} ${applicant.lastName || ''}`.trim() || applicant.name || applicant.username || 'Unknown';
+    const contact = `${esc(applicant.email || '-')}<br>${esc(applicant.phone || '-')}`;
+    const profile = `<details class="admin-profile-details"><summary>View details</summary><dl><dt>Date of birth</dt><dd>${esc(applicant.dateOfBirth || '-')}</dd><dt>Address line 1</dt><dd>${esc(applicant.addressLine1 || applicant.permanentAddress || '-')}</dd><dt>Address line 2</dt><dd>${esc(applicant.addressLine2 || '-')}</dd><dt>City</dt><dd>${esc(applicant.city || '-')}</dd><dt>PIN code</dt><dd>${esc(applicant.pinCode || '-')}</dd></dl></details>`;
+    const applicationDetails = `<strong>${esc(job.title || 'Job removed')}</strong><p>${esc(job.department || '-')} · ${esc(job.location || '-')}</p>${application.coverLetter ? `<p>${esc(application.coverLetter)}</p>` : ''}`;
+    const submitted = application.createdAt ? new Date(application.createdAt).toLocaleDateString() : '-';
+    const manage = `<button class="danger" type="button" data-application-delete="${esc(application.id)}">Delete</button>`;
+    return `<tr><td><span class="badge job">Portal</span></td><td>${esc(fullName)}</td><td>${contact}</td><td>${profile}</td><td>${photo}</td><td>${documentLinks}</td><td>${applicationDetails}</td><td>${submitted}</td><td>${actions}</td><td>${manage}</td></tr>`;
+  });
+  table.innerHTML = headers + (websiteRows.length || applicationRows.length ? [...websiteRows, ...applicationRows].join('') : '<tr><td colspan="10">No applicants or applications yet.</td></tr>');
+  table.querySelectorAll('[data-application-status]').forEach((select) => select.addEventListener('change', () => setApplicationStatus(select.dataset.applicationStatus, select.value)));
+  table.querySelectorAll('[data-application-approve]').forEach((button) => button.addEventListener('click', () => setApplicationStatus(button.dataset.applicationApprove, 'APPROVED')));
+  table.querySelectorAll('[data-application-delete]').forEach((button) => button.addEventListener('click', () => deletePortalApplication(button.dataset.applicationDelete)));
+  bindArchiveButtons(table);
+  loadApplicantFiles(table);
+}
+function delApplicant(i){ if(confirm('Delete this application record?')){ deleteApplicant(i); renderApplicants(); } }
+function deletePortalApplication(id){
+  if (!confirm('Delete this job application? The applicant profile and uploaded files will remain.')) return;
+  writeAdminStore(APPLICATIONS_KEY, readAdminStore(APPLICATIONS_KEY).filter(application => application.id !== id));
+  writeAdminStore(HR_RECORDS_KEY, readAdminStore(HR_RECORDS_KEY).filter(record => record.applicationId !== id));
+  loadApplicationsForReview();
+  loadHRRecords();
+}
+function esc(s){ return String(s ?? '').replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c])); }
+
+function bytesToHex(bytes){ return [...bytes].map(byte => byte.toString(16).padStart(2, '0')).join(''); }
+
+function fullApplicantName(applicant){
+  return `${applicant.firstName || ''} ${applicant.lastName || ''}`.trim() || applicant.name || applicant.username || 'applicant';
+}
+
+function archiveButton(files, name){
+  if (!files.length) return '';
+  return `<button class="secondary-btn" type="button" data-download-zip="${esc(JSON.stringify(files))}" data-archive-name="${esc(name)}">Download all as ZIP</button>`;
+}
+
+function bindArchiveButtons(container){
+  container.querySelectorAll('[data-download-zip]').forEach(button => {
+    button.addEventListener('click', () => downloadApplicantArchive(button));
+  });
+}
+
+function openAdminUploadDatabase(){
+  return new Promise((resolve, reject) => {
+    const opening = indexedDB.open('mkhz_portal_uploads', 1);
+    opening.onupgradeneeded = () => opening.result.createObjectStore('files', { keyPath: 'id' });
+    opening.onerror = () => reject(new Error('Could not open browser file storage.'));
+    opening.onsuccess = () => resolve(opening.result);
+  });
+}
+
+async function getAdminUpload(id){
+  const database = await openAdminUploadDatabase();
+  try {
+    return await new Promise((resolve, reject) => {
+      const transaction = database.transaction('files', 'readonly');
+      const request = transaction.objectStore('files').get(id);
+      request.onsuccess = () => resolve(request.result || null);
+      request.onerror = () => reject(new Error('Could not read an uploaded file.'));
+      transaction.onabort = () => reject(new Error('File storage was interrupted.'));
+    });
+  } finally {
+    database.close();
+  }
+}
+
+const CRC32_TABLE = Uint32Array.from({ length: 256 }, (_, value) => {
+  let crc = value;
+  for (let bit = 0; bit < 8; bit++) crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0);
+  return crc >>> 0;
+});
+
+function crc32(bytes){
+  let crc = 0xffffffff;
+  for (const byte of bytes) crc = CRC32_TABLE[(crc ^ byte) & 0xff] ^ (crc >>> 8);
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+function writeZipHeader(size, filenameLength, timestamp, checksum, offset = 0, central = false){
+  const header = new Uint8Array(central ? 46 : 30);
+  const view = new DataView(header.buffer);
+  if (central){
+    view.setUint32(0, 0x02014b50, true);
+    view.setUint16(4, 20, true);
+    view.setUint16(6, 20, true);
+    view.setUint16(8, 0x0800, true);
+    view.setUint16(10, 0, true);
+    view.setUint16(12, timestamp.time, true);
+    view.setUint16(14, timestamp.date, true);
+    view.setUint32(16, checksum, true);
+    view.setUint32(20, size, true);
+    view.setUint32(24, size, true);
+    view.setUint16(28, filenameLength, true);
+    view.setUint32(42, offset, true);
+  } else {
+    view.setUint32(0, 0x04034b50, true);
+    view.setUint16(4, 20, true);
+    view.setUint16(6, 0x0800, true);
+    view.setUint16(8, 0, true);
+    view.setUint16(10, timestamp.time, true);
+    view.setUint16(12, timestamp.date, true);
+    view.setUint32(14, checksum, true);
+    view.setUint32(18, size, true);
+    view.setUint32(22, size, true);
+    view.setUint16(26, filenameLength, true);
+  }
+  return header;
+}
+
+function makeZip(files){
+  const encoder = new TextEncoder();
+  const now = new Date();
+  const timestamp = {
+    time: (now.getHours() << 11) | (now.getMinutes() << 5) | Math.floor(now.getSeconds() / 2),
+    date: ((Math.max(now.getFullYear(), 1980) - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate()
+  };
+  const localParts = [];
+  const centralParts = [];
+  let localSize = 0;
+
+  for (const file of files){
+    const nameBytes = encoder.encode(file.name);
+    const checksum = crc32(file.bytes);
+    const header = writeZipHeader(file.bytes.length, nameBytes.length, timestamp, checksum);
+    localParts.push(header, nameBytes, file.bytes);
+    centralParts.push(writeZipHeader(file.bytes.length, nameBytes.length, timestamp, checksum, localSize, true), nameBytes);
+    localSize += header.length + nameBytes.length + file.bytes.length;
+  }
+
+  const centralSize = centralParts.reduce((total, part) => total + part.length, 0);
+  const end = new Uint8Array(22);
+  const endView = new DataView(end.buffer);
+  endView.setUint32(0, 0x06054b50, true);
+  endView.setUint16(8, files.length, true);
+  endView.setUint16(10, files.length, true);
+  endView.setUint32(12, centralSize, true);
+  endView.setUint32(16, localSize, true);
+  return new Blob([...localParts, ...centralParts, end], { type: 'application/zip' });
+}
+
+function safeArchiveName(value){
+  return String(value || 'applicant').replace(/[<>:"/\\|?*\x00-\x1f]/g, '_').replace(/[. ]+$/g, '').trim() || 'applicant';
+}
+
+async function downloadApplicantArchive(button){
+  const originalLabel = button.textContent;
+  button.disabled = true;
+  button.textContent = 'Preparing ZIP...';
+  try {
+    const requestedFiles = JSON.parse(button.dataset.downloadZip);
+    const uploads = await Promise.all(requestedFiles.map(async ({ label, id }) => {
+      const upload = await getAdminUpload(id);
+      if (!upload?.file) throw new Error(`${label} is unavailable. The ZIP was not created.`);
+      const name = `${safeArchiveName(label)} - ${safeArchiveName(upload.name || 'file')}`;
+      return { name, bytes: new Uint8Array(await upload.file.arrayBuffer()) };
+    }));
+    const zip = makeZip(uploads);
+    const url = URL.createObjectURL(zip);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${safeArchiveName(button.dataset.archiveName)}_documents.zip`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch (error) {
+    alert(error.message || 'Could not create the document ZIP.');
+  } finally {
+    button.disabled = false;
+    button.textContent = originalLabel;
+  }
+}
+
+async function hashAdminPassword(password, saltHex){
+  if (!crypto.subtle) throw new Error('Password hashing requires a secure HTTPS site.');
+  const salt = saltHex ? Uint8Array.from(saltHex.match(/.{2}/g), byte => parseInt(byte, 16)) : crypto.getRandomValues(new Uint8Array(16));
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations: 150000, hash: 'SHA-256' }, key, 256);
+  return { salt: bytesToHex(salt), hash: bytesToHex(new Uint8Array(bits)) };
+}
+
+function loadApplicantFiles(table){
+  (adminFileUrls.get(table) || []).forEach(url => URL.revokeObjectURL(url));
+  adminFileUrls.set(table, []);
+  const fileLinks = table.querySelectorAll('[data-upload-id]');
+  if (!fileLinks.length || !window.indexedDB) return;
+  const urls = [];
+  adminFileUrls.set(table, urls);
+
+  const opening = indexedDB.open('mkhz_portal_uploads', 1);
+  opening.onupgradeneeded = () => opening.result.createObjectStore('files', { keyPath: 'id' });
+  opening.onerror = () => fileLinks.forEach(link => { link.textContent = 'Unavailable'; });
+  opening.onsuccess = () => {
+    const database = opening.result;
+    const transaction = database.transaction('files', 'readonly');
+    const store = transaction.objectStore('files');
+    fileLinks.forEach(link => {
+      const lookup = store.get(link.dataset.uploadId);
+      lookup.onsuccess = () => {
+        if (!lookup.result) {
+          link.textContent = 'Unavailable';
+          return;
+        }
+        const url = URL.createObjectURL(lookup.result.file);
+        urls.push(url);
+        if (link.dataset.uploadKind === 'photo') {
+          link.src = url;
+          link.hidden = false;
+        } else {
+          link.href = url;
+          link.download = lookup.result.name;
+          link.textContent = `${link.dataset.uploadLabel ? `${link.dataset.uploadLabel}: ` : ''}${lookup.result.name}`;
+        }
+      };
+      lookup.onerror = () => { link.textContent = 'Unavailable'; };
+    });
+    transaction.oncomplete = () => database.close();
+    transaction.onerror = () => database.close();
+  };
+}
+
+function loadPostedJobs(){
+  const table = document.getElementById('apiJobsTable');
+  const jobs = readAdminStore(JOBS_KEY);
+  table.innerHTML = '<tr><th>Job</th><th>Department</th><th>Location</th><th>Type</th><th>Salary</th><th>Status</th><th>Manage</th></tr>' +
+    (jobs.length ? jobs.map(job => `<tr><td>${esc(job.title)}</td><td>${esc(job.department)}</td><td>${esc(job.location)}</td><td>${esc(job.employmentType)}</td><td>${esc(job.salary || '-')}</td><td>${job.isActive === false ? 'Hidden' : 'Published'}</td><td><div class="admin-actions"><button class="btn" type="button" data-job-edit="${esc(job.id)}">Edit</button><button class="secondary-btn" type="button" data-job-toggle="${esc(job.id)}">${job.isActive === false ? 'Publish' : 'Hide'}</button><button class="danger" type="button" data-job-delete="${esc(job.id)}">Delete</button></div></td></tr>`).join('') : '<tr><td colspan="7">No jobs published yet.</td></tr>');
+  table.querySelectorAll('[data-job-edit]').forEach(button => button.addEventListener('click', () => editJob(button.dataset.jobEdit)));
+  table.querySelectorAll('[data-job-toggle]').forEach(button => button.addEventListener('click', () => toggleJob(button.dataset.jobToggle)));
+  table.querySelectorAll('[data-job-delete]').forEach(button => button.addEventListener('click', () => deleteJob(button.dataset.jobDelete)));
+}
+
+function editJob(id){
+  const job = readAdminStore(JOBS_KEY).find(item => item.id === id);
+  if (!job) return;
+  const form = document.getElementById('jobForm');
+  ['title', 'department', 'location', 'employmentType', 'experience', 'salary', 'description', 'qualifications'].forEach(field => {
+    form.elements[field].value = job[field] || '';
+  });
+  form.elements.responsibilities.value = Array.isArray(job.responsibilities) ? job.responsibilities.join('\n') : (job.responsibilities || '');
+  form.elements.jobId.value = job.id;
+  form.querySelector('button[type="submit"]').textContent = 'Save job changes';
+  document.getElementById('cancelJobEdit').hidden = false;
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetJobForm(){
+  const form = document.getElementById('jobForm');
+  form.reset();
+  form.elements.jobId.value = '';
+  form.querySelector('button[type="submit"]').textContent = 'Publish job';
+  document.getElementById('cancelJobEdit').hidden = true;
+}
+
+function toggleJob(id){
+  const jobs = readAdminStore(JOBS_KEY);
+  const job = jobs.find(item => item.id === id);
+  if (!job) return;
+  job.isActive = job.isActive === false ? true : false;
+  writeAdminStore(JOBS_KEY, jobs);
+  loadPostedJobs();
+}
+
+function deleteJob(id){
+  if (!confirm('Delete this job? Existing applications remain in the review list.')) return;
+  writeAdminStore(JOBS_KEY, readAdminStore(JOBS_KEY).filter(job => job.id !== id));
+  loadPostedJobs();
+  loadApplicationsForReview();
+}
+
+document.getElementById('cancelJobEdit').addEventListener('click', resetJobForm);
+
+function loadApplicationsForReview(){
+  renderApplicants();
+}
+
+function setApplicationStatus(id, status){
+  const applications = readAdminStore(APPLICATIONS_KEY);
+  const application = applications.find(item => item.id === id);
+  if (!application) return;
+  if (['APPROVED', 'OFFERED', 'HIRED'].includes(status) && !readAdminStore(USERS_KEY).some(user => user.id === application.userId)) {
+    alert('The applicant account could not be found. The application was not approved or added to HR.');
+    loadApplicationsForReview();
+    return;
+  }
+  application.status = status;
+  writeAdminStore(APPLICATIONS_KEY, applications);
+  syncHRRecord(application, status);
+  loadApplicationsForReview();
+  loadHRRecords();
+}
+
+function syncHRRecord(application, status){
+  const records = readAdminStore(HR_RECORDS_KEY);
+  const existingIndex = records.findIndex(record => record.applicationId === application.id);
+  if (!['APPROVED', 'OFFERED', 'HIRED'].includes(status)) {
+    if (existingIndex !== -1) {
+      records.splice(existingIndex, 1);
+      writeAdminStore(HR_RECORDS_KEY, records);
+    }
+    return;
+  }
+
+  const user = readAdminStore(USERS_KEY).find(item => item.id === application.userId);
+  if (!user) return;
+  const job = readAdminStore(JOBS_KEY).find(item => item.id === application.jobId) || {};
+  const existing = existingIndex === -1 ? null : records[existingIndex];
+  const today = new Date().toISOString().slice(0, 10);
+  const record = {
+    id: existing?.id || `hr-${application.id}`,
+    applicationId: application.id,
+    userId: user.id,
+    username: user.username || '',
+    firstName: user.firstName || '',
+    lastName: user.lastName || '',
+    name: user.name || user.username || 'Applicant',
+    email: user.email || '',
+    phone: user.phone || '',
+    dateOfBirth: user.dateOfBirth || '',
+    addressLine1: user.addressLine1 || user.permanentAddress || '',
+    addressLine2: user.addressLine2 || '',
+    city: user.city || '',
+    pinCode: user.pinCode || '',
+    photoId: user.photoId || null,
+    resumeId: user.resumeId || null,
+    aadhaarCardId: user.aadhaarCardId || null,
+    addressProofId: user.addressProofId || null,
+    panCardId: user.panCardId || null,
+    jobId: application.jobId,
+    jobTitle: job.title || 'Job removed',
+    department: job.department || '',
+    location: job.location || '',
+    coverLetter: application.coverLetter || '',
+    applicationDate: application.createdAt || today,
+    approvedAt: existing?.approvedAt || today,
+    startDate: existing?.startDate || today,
+    status
+  };
+  if (existingIndex === -1) records.unshift(record);
+  else records[existingIndex] = record;
+  writeAdminStore(HR_RECORDS_KEY, records);
+}
+
+function loadHRRecords(){
+  const table = document.getElementById('hrRecordsTable');
+  const records = readAdminStore(HR_RECORDS_KEY);
+  document.getElementById('noHrRecords').style.display = records.length ? 'none' : 'block';
+  table.innerHTML = '<tr><th>Employee</th><th>Contact</th><th>Profile details</th><th>Photo</th><th>Documents</th><th>Position</th><th>Approved</th><th>Start date</th><th>Status</th></tr>' +
+    (records.length ? records.map(record => {
+      const profile = `<details class="admin-profile-details"><summary>View details</summary><dl><dt>Username</dt><dd>${esc(record.username || '-')}</dd><dt>Date of birth</dt><dd>${esc(record.dateOfBirth || '-')}</dd><dt>Address line 1</dt><dd>${esc(record.addressLine1 || '-')}</dd><dt>Address line 2</dt><dd>${esc(record.addressLine2 || '-')}</dd><dt>City</dt><dd>${esc(record.city || '-')}</dd><dt>PIN code</dt><dd>${esc(record.pinCode || '-')}</dd><dt>Application date</dt><dd>${esc(record.applicationDate || '-')}</dd><dt>Application message</dt><dd>${esc(record.coverLetter || '-')}</dd></dl></details>`;
+      const photo = record.photoId ? `<img class="applicant-thumb" data-upload-id="${esc(record.photoId)}" data-upload-kind="photo" alt="${esc(record.name)} photo" hidden>` : '-';
+      const documents = [
+        ['Resume', record.resumeId],
+        ['Aadhaar card', record.aadhaarCardId],
+        ['Address proof', record.addressProofId],
+        ['PAN card', record.panCardId]
+      ].filter(([, id]) => id);
+      const archiveFiles = [['Profile photo', record.photoId], ...documents].filter(([, id]) => id).map(([label, id]) => ({ label, id }));
+      const links = documents.length ? `<div class="admin-profile-docs">${documents.map(([label, id]) => `<a data-upload-id="${esc(id)}" data-upload-kind="document" data-upload-label="${esc(label)}" target="_blank" rel="noopener noreferrer">Loading...</a>`).join('')}${archiveButton(archiveFiles, record.name)}</div>` : (archiveFiles.length ? archiveButton(archiveFiles, record.name) : '-');
+      const position = `<strong>${esc(record.jobTitle)}</strong><br>${esc(record.department || '-')} · ${esc(record.location || '-')}`;
+      const startDate = `<input class="hr-start-date" type="date" value="${esc(record.startDate)}" data-hr-start-date="${esc(record.applicationId)}" aria-label="Start date for ${esc(record.name)}">`;
+      return `<tr><td>${esc(record.name)}</td><td>${esc(record.email || '-')}<br>${esc(record.phone || '-')}</td><td>${profile}</td><td>${photo}</td><td>${links}</td><td>${position}</td><td>${esc(record.approvedAt || '-')}</td><td>${startDate}</td><td>${esc(record.status)}</td></tr>`;
+    }).join('') : '<tr><td colspan="9">No approved applicants yet.</td></tr>');
+  table.querySelectorAll('[data-hr-start-date]').forEach(input => input.addEventListener('change', () => updateHRStartDate(input.dataset.hrStartDate, input.value)));
+  bindArchiveButtons(table);
+  loadApplicantFiles(table);
+}
+
+function updateHRStartDate(applicationId, startDate){
+  const records = readAdminStore(HR_RECORDS_KEY);
+  const record = records.find(item => item.applicationId === applicationId);
+  if (!record || !startDate) return;
+  record.startDate = startDate;
+  writeAdminStore(HR_RECORDS_KEY, records);
+}
+
+function loadClientRequestsForReview(){
+  const table = document.getElementById('apiClientRequestTable');
+  const users = readAdminStore(USERS_KEY);
+  const requests = readAdminStore(CLIENT_REQUESTS_KEY);
+  table.innerHTML = '<tr><th>Company</th><th>Contact</th><th>Roles needed</th><th>Headcount</th><th>Location</th><th>Status</th><th>Decision</th></tr>' +
+    (requests.length ? requests.map(request => {
+      const user = users.find(item => item.id === request.userId) || {};
+      const canDecide = request.status === 'PENDING';
+      const actions = canDecide
+        ? `<button class="btn" type="button" data-client-id="${esc(request.id)}" data-status="APPROVED">Approve</button> <button class="danger" type="button" data-client-id="${esc(request.id)}" data-status="REJECTED">Reject</button>`
+        : '-';
+      return `<tr><td>${esc(request.companyName)}</td><td>${esc(user.name || 'Unknown')}<br>${esc(user.email || '-')}</td><td>${esc(request.rolesNeeded)}</td><td>${esc(request.headcount)}</td><td>${esc(request.location)}</td><td>${esc(request.status)}</td><td>${actions}</td></tr>`;
+    }).join('') : '<tr><td colspan="7">No client staffing requests yet.</td></tr>');
+  table.querySelectorAll('[data-client-id]').forEach(button => button.addEventListener('click', () => setClientRequestStatus(button.dataset.clientId, button.dataset.status)));
+}
+
+function setClientRequestStatus(id, status){
+  const requests = readAdminStore(CLIENT_REQUESTS_KEY);
+  const request = requests.find(item => item.id === id);
+  if (!request) return;
+  request.status = status;
+  writeAdminStore(CLIENT_REQUESTS_KEY, requests);
+  loadClientRequestsForReview();
+}
+
+function loadAdminAccounts(){
+  const table = document.getElementById('adminAccountsTable');
+  const users = readAdminStore(USERS_KEY);
+  table.innerHTML = '<tr><th>Username</th><th>Name</th><th>Email</th><th>Profile details</th><th>Account type</th><th>Access</th><th>Change access</th><th>Update login credentials</th></tr>' +
+    (users.length ? users.map(user => {
+      const profile = `<details class="admin-profile-details"><summary>View profile</summary><dl><dt>First name</dt><dd>${esc(user.firstName || '-')}</dd><dt>Last name</dt><dd>${esc(user.lastName || '-')}</dd><dt>Date of birth</dt><dd>${esc(user.dateOfBirth || '-')}</dd><dt>Mobile</dt><dd>${esc(user.phone || '-')}</dd><dt>Address line 1</dt><dd>${esc(user.addressLine1 || user.permanentAddress || '-')}</dd><dt>Address line 2</dt><dd>${esc(user.addressLine2 || '-')}</dd><dt>City</dt><dd>${esc(user.city || '-')}</dd><dt>PIN code</dt><dd>${esc(user.pinCode || '-')}</dd></dl></details>`;
+      return `<tr><td>${esc(user.username)}</td><td>${esc(user.name)}</td><td>${esc(user.email)}</td><td>${profile}</td><td><select data-account-role="${esc(user.id)}" aria-label="Account type for ${esc(user.username)}"><option value="APPLICANT" ${user.role === 'APPLICANT' ? 'selected' : ''}>Applicant</option><option value="CLIENT" ${user.role === 'CLIENT' ? 'selected' : ''}>Client</option></select></td><td>${user.isActive === false ? 'Disabled' : 'Active'}</td><td><button class="secondary-btn" type="button" data-account-toggle="${esc(user.id)}">${user.isActive === false ? 'Enable' : 'Disable'}</button></td><td><form class="account-credentials" data-account-credentials="${esc(user.id)}"><label>Username<input name="username" value="${esc(user.username)}" minlength="3" autocomplete="off" required></label><label>New password<input name="password" type="password" minlength="8" autocomplete="new-password" placeholder="Leave blank to keep"></label><button class="secondary-btn" type="submit">Save</button></form></td></tr>`;
+    }).join('') : '<tr><td colspan="8">No registered portal accounts yet.</td></tr>');
+  table.querySelectorAll('[data-account-role]').forEach(select => select.addEventListener('change', () => updateAccount(select.dataset.accountRole, { role: select.value })));
+  table.querySelectorAll('[data-account-toggle]').forEach(button => button.addEventListener('click', () => {
+    const user = users.find(item => item.id === button.dataset.accountToggle);
+    if (user) updateAccount(user.id, { isActive: user.isActive === false });
+  }));
+  table.querySelectorAll('[data-account-credentials]').forEach(form => form.addEventListener('submit', event => saveAccountCredentials(event, form)));
+}
+
+async function saveAccountCredentials(event, form){
+  event.preventDefault();
+  const button = form.querySelector('button[type="submit"]');
+  const message = document.getElementById('accountsMessage');
+  const userId = form.dataset.accountCredentials;
+  const fields = Object.fromEntries(new FormData(form));
+  const username = fields.username.trim();
+  const password = fields.password;
+  const users = readAdminStore(USERS_KEY);
+  const user = users.find(item => item.id === userId);
+  message.hidden = true;
+  if (!user) return;
+  if (users.some(item => item.id !== userId && item.username.toLowerCase() === username.toLowerCase())){
+    message.textContent = 'That username is already in use.';
+    message.hidden = false;
+    return;
+  }
+  button.disabled = true;
+  button.textContent = 'Saving...';
+  try {
+    user.username = username;
+    if (password) {
+      const credentials = await hashAdminPassword(password);
+      user.passwordSalt = credentials.salt;
+      user.passwordHash = credentials.hash;
+    }
+    writeAdminStore(USERS_KEY, users);
+    message.textContent = 'Login credentials updated.';
+    message.hidden = false;
+    loadAdminAccounts();
+  } catch (error) {
+    message.textContent = error.message;
+    message.hidden = false;
+  } finally {
+    if (button.isConnected) {
+      button.disabled = false;
+      button.textContent = 'Save';
+    }
+  }
+}
+
+function updateAccount(id, changes){
+  const users = readAdminStore(USERS_KEY);
+  const user = users.find(item => item.id === id);
+  if (!user) return;
+  Object.assign(user, changes);
+  writeAdminStore(USERS_KEY, users);
+  loadAdminAccounts();
+}
+
+document.getElementById('jobForm').addEventListener('submit', event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+  const message = document.getElementById('jobPostMessage');
+  button.disabled = true;
+  button.textContent = 'Publishing...';
+  message.hidden = true;
+  try {
+    const fields = Object.fromEntries(new FormData(form));
+    const jobs = readAdminStore(JOBS_KEY);
+    const existingJob = jobs.find(job => job.id === fields.jobId);
+    delete fields.jobId;
+    const job = {
+      ...existingJob,
+      ...fields,
+      id: existingJob?.id || `job-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      responsibilities: fields.responsibilities.split(/\r?\n/).map(item => item.trim()).filter(Boolean),
+      isActive: existingJob ? existingJob.isActive !== false : true,
+      createdAt: existingJob?.createdAt || new Date().toISOString()
+    };
+    if (existingJob) jobs[jobs.indexOf(existingJob)] = job;
+    else jobs.unshift(job);
+    writeAdminStore(JOBS_KEY, jobs);
+    message.textContent = existingJob ? 'Job changes saved.' : 'Job published for applicants on this browser.';
+    message.hidden = false;
+    resetJobForm();
+    loadPostedJobs();
+  } catch (error) {
+    message.textContent = error.message;
+    message.hidden = false;
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Publish job';
+  }
+});
+
+// ---- Salary (skill-based) ----
+function renderSkills(){
+  const s = getSettings();
+  const wrap = document.getElementById('skillForms');
+  wrap.innerHTML = '';
+  for (const [name,v] of Object.entries(s.skills)){
+    wrap.innerHTML += `<form data-skill="${name}">
+      <h3>${name}</h3>
+      <div class="sk-grid">
+        <div><label>Daily Rate (₹)</label><input type="number" class="f-rate" value="${v.rate}" min="0"></div>
+        <div><label>Basic (₹)</label><input type="number" class="f-basic" value="${v.basic}" min="0"></div>
+        <div><label>DA (₹)</label><input type="number" class="f-da" value="${v.da}" min="0"></div>
+        <div><label>HRA / Allowance (₹)</label><input type="number" class="f-hra" value="${v.hra}" min="0"></div>
+        <div><label>Employer PF (%)</label><input type="number" class="f-pf" value="${v.pf}" step="0.01" min="0"></div>
+        <div><label>Employer ESI (%)</label><input type="number" class="f-esi" value="${v.esi}" step="0.01" min="0"></div>
+      </div>
+      <p style="color:var(--green);font-weight:700;margin:10px 0">Gross: ₹${(v.basic+v.da+v.hra).toLocaleString('en-IN')}</p>
+      <button class="btn" type="submit">Save ${name}</button>
+      <div class="notice ok" style="display:none;margin-top:10px">Saved & published live.</div>
+    </form>`;
+  }
+  wrap.querySelectorAll('form').forEach(f => f.addEventListener('submit', e => {
+    e.preventDefault();
+    const s2 = getSettings();
+    s2.skills[f.dataset.skill] = {
+      rate:+f.querySelector('.f-rate').value, basic:+f.querySelector('.f-basic').value,
+      da:+f.querySelector('.f-da').value, hra:+f.querySelector('.f-hra').value,
+      pf:+f.querySelector('.f-pf').value, esi:+f.querySelector('.f-esi').value
+    };
+    saveSettings(s2); broadcast(); renderSkills();
+    alert(f.dataset.skill + ' salary settings saved in this browser.');
+  }));
+}
+
+// ---- Attendance ----
+function renderAtt(){
+  const s = getSettings();
+  document.getElementById('aDays').value = s.attendance.workingDays;
+  document.getElementById('aShifts').value = s.attendance.shifts;
+  document.getElementById('aOT').value = s.attendance.otRate;
+  document.getElementById('aLOP').value = s.attendance.lopRule;
+}
+document.getElementById('attForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const s = getSettings();
+  s.attendance = { workingDays:+document.getElementById('aDays').value, shifts:document.getElementById('aShifts').value,
+    otRate:+document.getElementById('aOT').value, lopRule:document.getElementById('aLOP').value };
+  saveSettings(s); broadcast();
+  document.getElementById('attOk').style.display='block'; setTimeout(()=>document.getElementById('attOk').style.display='none',2500);
+});
+
+// ---- Site text ----
+function renderSite(){
+  const s = getSettings();
+  document.getElementById('sComp').value = s.company;
+  document.getElementById('sTag').value = s.tagline;
+  document.getElementById('sPhone').value = s.phone;
+  document.getElementById('sEmail').value = s.email;
+}
+document.getElementById('siteForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const s = getSettings();
+  s.company = document.getElementById('sComp').value; s.tagline = document.getElementById('sTag').value;
+  s.phone = document.getElementById('sPhone').value; s.email = document.getElementById('sEmail').value;
+  saveSettings(s); broadcast();
+  document.getElementById('siteOk').style.display='block'; setTimeout(()=>document.getElementById('siteOk').style.display='none',2500);
+});
+
+function openAdminGalleryDatabase(){
+  return new Promise((resolve, reject) => {
+    const opening = indexedDB.open(GALLERY_DB_NAME, 1);
+    opening.onupgradeneeded = () => opening.result.createObjectStore(GALLERY_STORE_NAME, { keyPath: 'id' });
+    opening.onsuccess = () => resolve(opening.result);
+    opening.onerror = () => reject(new Error('Could not open gallery image storage.'));
+  });
+}
+
+async function saveCompanyGalleryImage(file, description){
+  const database = await openAdminGalleryDatabase();
+  try {
+    await new Promise((resolve, reject) => {
+      const transaction = database.transaction(GALLERY_STORE_NAME, 'readwrite');
+      transaction.objectStore(GALLERY_STORE_NAME).add({
+        id: crypto.randomUUID ? crypto.randomUUID() : `gallery-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        name: file.name,
+        description,
+        file,
+        uploadedAt: new Date().toISOString()
+      });
+      transaction.oncomplete = resolve;
+      transaction.onerror = () => reject(new Error(`Could not save ${file.name}.`));
+      transaction.onabort = () => reject(new Error(`Saving ${file.name} was interrupted.`));
+    });
+  } finally {
+    database.close();
+  }
+}
+
+async function removeCompanyGalleryImage(id){
+  const database = await openAdminGalleryDatabase();
+  try {
+    await new Promise((resolve, reject) => {
+      const transaction = database.transaction(GALLERY_STORE_NAME, 'readwrite');
+      transaction.objectStore(GALLERY_STORE_NAME).delete(id);
+      transaction.oncomplete = resolve;
+      transaction.onerror = () => reject(new Error('Could not remove this gallery image.'));
+      transaction.onabort = () => reject(new Error('Removing this gallery image was interrupted.'));
+    });
+  } finally {
+    database.close();
+  }
+}
+
+async function loadAdminCompanyGallery(){
+  const gallery = document.getElementById('adminCompanyGallery');
+  adminGalleryUrls.forEach(url => URL.revokeObjectURL(url));
+  adminGalleryUrls = [];
+  gallery.replaceChildren();
+  try {
+    const database = await openAdminGalleryDatabase();
+    let images;
+    try {
+      images = await new Promise((resolve, reject) => {
+        const transaction = database.transaction(GALLERY_STORE_NAME, 'readonly');
+        const request = transaction.objectStore(GALLERY_STORE_NAME).getAll();
+        request.onsuccess = () => resolve(request.result || []);
+        request.onerror = () => reject(new Error('Could not load gallery images.'));
+        transaction.onabort = () => reject(new Error('Gallery image storage was interrupted.'));
+      });
+    } finally {
+      database.close();
+    }
+
+    if (!images.length) {
+      gallery.innerHTML = '<p class="company-gallery-empty">No company images uploaded yet.</p>';
+      return;
+    }
+    images.sort((a, b) => String(b.uploadedAt || '').localeCompare(String(a.uploadedAt || '')));
+    for (const image of images) {
+      const card = document.createElement('article');
+      card.className = 'company-gallery-card';
+      const photo = document.createElement('img');
+      const url = URL.createObjectURL(image.file);
+      adminGalleryUrls.push(url);
+      photo.src = url;
+      photo.alt = image.name;
+      const content = document.createElement('div');
+      content.className = 'company-gallery-card-content';
+      const name = document.createElement('strong');
+      name.textContent = image.name;
+      const description = document.createElement('p');
+      description.className = 'company-gallery-card-description';
+      description.textContent = image.description || 'No description added.';
+      const remove = document.createElement('button');
+      remove.className = 'danger';
+      remove.type = 'button';
+      remove.textContent = 'Remove';
+      remove.addEventListener('click', async () => {
+        remove.disabled = true;
+        try {
+          await removeCompanyGalleryImage(image.id);
+          await loadAdminCompanyGallery();
+        } catch (error) {
+          document.getElementById('companyGalleryMessage').textContent = error.message;
+          document.getElementById('companyGalleryMessage').hidden = false;
+          remove.disabled = false;
+        }
+      });
+      content.append(name, remove);
+      card.append(photo, content, description);
+      gallery.append(card);
+    }
+  } catch (error) {
+    const message = document.getElementById('companyGalleryMessage');
+    message.textContent = error.message;
+    message.hidden = false;
+  }
+}
+
+document.getElementById('companyGalleryForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const input = document.getElementById('companyGalleryFiles');
+  const description = document.getElementById('companyGalleryDescription').value.trim();
+  const message = document.getElementById('companyGalleryMessage');
+  const button = form.querySelector('button[type="submit"]');
+  const files = [...input.files];
+  message.hidden = true;
+  message.textContent = '';
+  if (!files.length) {
+    message.textContent = 'Choose at least one company image to upload.';
+    message.hidden = false;
+    return;
+  }
+  const invalidFile = files.find(file => !file.type.startsWith('image/') || file.size > ADMIN_GALLERY_MAX_IMAGE_SIZE);
+  if (invalidFile) {
+    message.textContent = !invalidFile.type.startsWith('image/')
+      ? `${invalidFile.name} is not a supported image.`
+      : `${invalidFile.name} is larger than the 5 MB limit.`;
+    message.hidden = false;
+    return;
+  }
+  button.disabled = true;
+  button.textContent = 'Uploading...';
+  try {
+    for (const file of files) await saveCompanyGalleryImage(file, description);
+    form.reset();
+    message.textContent = `${files.length} image${files.length === 1 ? '' : 's'} uploaded to the company gallery.`;
+    await loadAdminCompanyGallery();
+  } catch (error) {
+    message.textContent = error.message;
+  } finally {
+    message.hidden = false;
+    button.disabled = false;
+    button.textContent = 'Upload images';
+  }
+});
+</script>
+</body></html>
